@@ -1,15 +1,13 @@
 # middlewares/method-override
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
+[![Software License][ico-license]](LICENSE)
 [![Build Status][ico-travis]][link-travis]
 [![Quality Score][ico-scrutinizer]][link-scrutinizer]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![SensioLabs Insight][ico-sensiolabs]][link-sensiolabs]
 
 Middleware to override the request method using the `X-Http-Method-Override` header. This is useful for clients unable to send other methods than GET and POST.
-
-**Note:** This middleware is intended for server side only
 
 ## Requirements
 
