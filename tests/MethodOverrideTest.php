@@ -4,9 +4,7 @@ namespace Middlewares\Tests;
 
 use Middlewares\MethodOverride;
 use Middlewares\Utils\Dispatcher;
-use Middlewares\Utils\CallableMiddleware;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response;
+use Middlewares\Utils\Factory;
 
 class MethodOverrideTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,20 +23,15 @@ class MethodOverrideTest extends \PHPUnit_Framework_TestCase
      */
     public function testHeaders($original, $overrided, $status, $body)
     {
-        $request = new ServerRequest();
-        $request = $request
-            ->withMethod($original)
+        $request = Factory::createServerRequest([], $original)
             ->withHeader('X-Http-Method-Override', $overrided);
 
         $response = (new Dispatcher([
             new MethodOverride(),
 
-            new CallableMiddleware(function ($request) {
-                $response = new Response();
-                $response->getBody()->write($request->getMethod());
-
-                return $response;
-            }),
+            function ($request) {
+                echo $request->getMethod();
+            },
         ]))->dispatch($request);
 
         $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
@@ -63,9 +56,7 @@ class MethodOverrideTest extends \PHPUnit_Framework_TestCase
      */
     public function testParams($original, $queryParams, $parsedBody, $status, $body)
     {
-        $request = new ServerRequest();
-        $request = $request
-            ->withMethod($original)
+        $request = Factory::createServerRequest([], $original)
             ->withQueryParams($queryParams)
             ->withParsedBody($parsedBody);
 
@@ -74,12 +65,9 @@ class MethodOverrideTest extends \PHPUnit_Framework_TestCase
                 ->parsedBodyParameter('method')
                 ->queryParameter('method'),
 
-            new CallableMiddleware(function ($request) {
-                $response = new Response();
-                $response->getBody()->write($request->getMethod());
-
-                return $response;
-            }),
+            function ($request) {
+                echo $request->getMethod();
+            },
         ]))->dispatch($request);
 
         $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
