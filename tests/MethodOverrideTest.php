@@ -26,13 +26,12 @@ class MethodOverrideTest extends \PHPUnit_Framework_TestCase
         $request = Factory::createServerRequest([], $original)
             ->withHeader('X-Http-Method-Override', $overrided);
 
-        $response = (new Dispatcher([
+        $response = Dispatcher::run([
             new MethodOverride(),
-
             function ($request) {
                 echo $request->getMethod();
             },
-        ]))->dispatch($request);
+        ], $request);
 
         $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
         $this->assertEquals($status, $response->getStatusCode());
@@ -60,15 +59,14 @@ class MethodOverrideTest extends \PHPUnit_Framework_TestCase
             ->withQueryParams($queryParams)
             ->withParsedBody($parsedBody);
 
-        $response = (new Dispatcher([
+        $response = Dispatcher::run([
             (new MethodOverride())
                 ->parsedBodyParameter('method')
                 ->queryParameter('method'),
-
             function ($request) {
                 echo $request->getMethod();
             },
-        ]))->dispatch($request);
+        ], $request);
 
         $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
         $this->assertEquals($status, $response->getStatusCode());
