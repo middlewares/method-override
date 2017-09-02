@@ -2,11 +2,12 @@
 
 namespace Middlewares\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Middlewares\MethodOverride;
 use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
 
-class MethodOverrideTest extends \PHPUnit_Framework_TestCase
+class MethodOverrideTest extends TestCase
 {
     public function headersProvider()
     {
