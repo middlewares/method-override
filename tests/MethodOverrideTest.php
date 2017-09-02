@@ -2,10 +2,10 @@
 
 namespace Middlewares\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Middlewares\MethodOverride;
 use Middlewares\Utils\Dispatcher;
 use Middlewares\Utils\Factory;
+use PHPUnit\Framework\TestCase;
 
 class MethodOverrideTest extends TestCase
 {
@@ -21,6 +21,10 @@ class MethodOverrideTest extends TestCase
 
     /**
      * @dataProvider headersProvider
+     * @param mixed $original
+     * @param mixed $overrided
+     * @param mixed $status
+     * @param mixed $body
      */
     public function testHeaders($original, $overrided, $status, $body)
     {
@@ -53,6 +57,11 @@ class MethodOverrideTest extends TestCase
 
     /**
      * @dataProvider paramsProvider
+     * @param mixed $original
+     * @param mixed $queryParams
+     * @param mixed $parsedBody
+     * @param mixed $status
+     * @param mixed $body
      */
     public function testParams($original, $queryParams, $parsedBody, $status, $body)
     {
