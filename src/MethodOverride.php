@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Middlewares;
 
@@ -33,10 +34,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Set allowed method for GET.
-     *
-     * @return self
      */
-    public function get(array $methods)
+    public function get(array $methods): self
     {
         $this->get = $methods;
 
@@ -45,10 +44,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Set allowed method for POST.
-     *
-     * @return self
      */
-    public function post(array $methods)
+    public function post(array $methods): self
     {
         $this->post = $methods;
 
@@ -57,12 +54,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Configure the parameter using in GET requests.
-     *
-     * @param string $name
-     *
-     * @return self
      */
-    public function queryParameter($name)
+    public function queryParameter(string $name): self
     {
         $this->queryParameter = $name;
 
@@ -71,12 +64,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Configure the parameter using in POST requests.
-     *
-     * @param string $name
-     *
-     * @return self
      */
-    public function parsedBodyParameter($name)
+    public function parsedBodyParameter(string $name): self
     {
         $this->parsedBodyParameter = $name;
 
@@ -85,13 +74,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Process a server request and return a response.
-     *
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $method = $this->getOverrideMethod($request);
 
@@ -112,12 +96,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Returns the override method.
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return string
      */
-    private function getOverrideMethod(ServerRequestInterface $request)
+    private function getOverrideMethod(ServerRequestInterface $request): string
     {
         if ($request->getMethod() === 'POST' && $this->parsedBodyParameter !== null) {
             $params = $request->getParsedBody();
@@ -138,12 +118,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Returns the allowed override methods.
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return array
      */
-    private function getAllowedOverrideMethods(ServerRequestInterface $request)
+    private function getAllowedOverrideMethods(ServerRequestInterface $request): array
     {
         switch ($request->getMethod()) {
             case 'GET':
