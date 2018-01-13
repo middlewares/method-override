@@ -118,6 +118,7 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Returns the allowed override methods.
+     * @codeCoverageIgnore
      */
     private function getAllowedOverrideMethods(ServerRequestInterface $request): array
     {

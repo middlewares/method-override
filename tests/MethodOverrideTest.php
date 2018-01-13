@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Middlewares\Tests;
 
@@ -9,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class MethodOverrideTest extends TestCase
 {
-    public function headersProvider()
+    public function headersProvider(): array
     {
         return [
             ['GET', 'HEAD', 200, 'HEAD'],
@@ -21,29 +22,29 @@ class MethodOverrideTest extends TestCase
 
     /**
      * @dataProvider headersProvider
-     * @param mixed $original
-     * @param mixed $overrided
-     * @param mixed $status
-     * @param mixed $body
      */
-    public function testHeaders($original, $overrided, $status, $body)
-    {
-        $request = Factory::createServerRequest([], $original)
-            ->withHeader('X-Http-Method-Override', $overrided);
+    public function testHeaders(
+        string $original,
+        string $overrided,
+        int $status,
+        string $body
+    ) {
+        $response = Dispatcher::run(
+            [
+                new MethodOverride(),
+                function ($request) {
+                    echo $request->getMethod();
+                },
+            ],
+            Factory::createServerRequest([], $original)
+                ->withHeader('X-Http-Method-Override', $overrided)
+        );
 
-        $response = Dispatcher::run([
-            new MethodOverride(),
-            function ($request) {
-                echo $request->getMethod();
-            },
-        ], $request);
-
-        $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
         $this->assertEquals($status, $response->getStatusCode());
         $this->assertEquals($body, (string) $response->getBody());
     }
 
-    public function paramsProvider()
+    public function paramsProvider(): array
     {
         return [
             ['GET', [], [], 200, 'GET'],
@@ -57,29 +58,57 @@ class MethodOverrideTest extends TestCase
 
     /**
      * @dataProvider paramsProvider
-     * @param mixed $original
-     * @param mixed $queryParams
-     * @param mixed $parsedBody
-     * @param mixed $status
-     * @param mixed $body
      */
-    public function testParams($original, $queryParams, $parsedBody, $status, $body)
-    {
-        $request = Factory::createServerRequest([], $original)
-            ->withQueryParams($queryParams)
-            ->withParsedBody($parsedBody);
+    public function testParams(
+        string $original,
+        array $queryParams,
+        array $parsedBody,
+        int $status,
+        string $body
+    ) {
+        $middleware = (new MethodOverride())
+            ->parsedBodyParameter('method')
+            ->queryParameter('method');
 
-        $response = Dispatcher::run([
-            (new MethodOverride())
-                ->parsedBodyParameter('method')
-                ->queryParameter('method'),
-            function ($request) {
-                echo $request->getMethod();
-            },
-        ], $request);
+        $response = Dispatcher::run(
+            [
+                $middleware,
+                function ($request) {
+                    echo $request->getMethod();
+                },
+            ],
+            Factory::createServerRequest([], $original)
+                ->withQueryParams($queryParams)
+                ->withParsedBody($parsedBody)
+        );
 
-        $this->assertInstanceOf('Psr\\Http\\Message\\ResponseInterface', $response);
         $this->assertEquals($status, $response->getStatusCode());
         $this->assertEquals($body, (string) $response->getBody());
+    }
+
+    public function testCustomGet()
+    {
+        $response = Dispatcher::run(
+            [
+                (new MethodOverride())->get(['CONNECT']),
+            ],
+            Factory::createServerRequest([], 'GET')
+                ->withHeader('X-Http-Method-Override', 'HEAD')
+        );
+
+        $this->assertEquals(405, $response->getStatusCode());
+    }
+
+    public function testCustomPost()
+    {
+        $response = Dispatcher::run(
+            [
+                (new MethodOverride())->post(['PUT']),
+            ],
+            Factory::createServerRequest([], 'POST')
+                ->withHeader('X-Http-Method-Override', 'DELETE')
+        );
+
+        $this->assertEquals(405, $response->getStatusCode());
     }
 }
