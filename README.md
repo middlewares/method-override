@@ -28,8 +28,8 @@ composer require middlewares/method-override
 ```php
 $dispatcher = new Dispatcher([
 	(new Middlewares\MethodOverride())
-        ->get(['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'])
-        ->post(['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'])
+        ->getMethods(['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'])
+        ->postMethods(['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'])
 		->queryParameter('method')
 		->parsedBodyParameter('method')
 ]);
@@ -39,11 +39,11 @@ $response = $dispatcher->dispatch(new ServerRequest());
 
 ## Options
 
-#### `get(array $methods)`
+#### `getMethods(array $methods)`
 
 Array with the methods that can override the GET method. By default is `['HEAD', 'CONNECT', 'TRACE', 'OPTIONS']`.
 
-#### `post(array $methods)`
+#### `postMethods(array $methods)`
 
 Array with the methods that can override the POST method. By default is `['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK']`.
 
