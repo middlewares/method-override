@@ -90,7 +90,7 @@ class MethodOverrideTest extends TestCase
     {
         $response = Dispatcher::run(
             [
-                (new MethodOverride())->get(['CONNECT']),
+                (new MethodOverride())->getMethods(['CONNECT']),
             ],
             Factory::createServerRequest([], 'GET')
                 ->withHeader('X-Http-Method-Override', 'HEAD')
@@ -103,7 +103,7 @@ class MethodOverrideTest extends TestCase
     {
         $response = Dispatcher::run(
             [
-                (new MethodOverride())->post(['PUT']),
+                (new MethodOverride())->postMethods(['PUT']),
             ],
             Factory::createServerRequest([], 'POST')
                 ->withHeader('X-Http-Method-Override', 'DELETE')

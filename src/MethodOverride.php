@@ -15,12 +15,12 @@ class MethodOverride implements MiddlewareInterface
     /**
      * @var array Allowed methods overrided in GET
      */
-    private $get = ['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'];
+    private $getMethods = ['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'];
 
     /**
      * @var array Allowed methods overrided in POST
      */
-    private $post = ['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'];
+    private $postMethods = ['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'];
 
     /**
      * @var null|string The POST parameter name
@@ -35,9 +35,9 @@ class MethodOverride implements MiddlewareInterface
     /**
      * Set allowed method for GET.
      */
-    public function get(array $methods): self
+    public function getMethods(array $getMethods): self
     {
-        $this->get = $methods;
+        $this->getMethods = $getMethods;
 
         return $this;
     }
@@ -45,9 +45,9 @@ class MethodOverride implements MiddlewareInterface
     /**
      * Set allowed method for POST.
      */
-    public function post(array $methods): self
+    public function postMethods(array $postMethods): self
     {
-        $this->post = $methods;
+        $this->postMethods = $postMethods;
 
         return $this;
     }
@@ -124,9 +124,9 @@ class MethodOverride implements MiddlewareInterface
     {
         switch ($request->getMethod()) {
             case 'GET':
-                return $this->get;
+                return $this->getMethods;
             case 'POST':
-                return $this->post;
+                return $this->postMethods;
             default:
                 return [];
         }
