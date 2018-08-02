@@ -31,12 +31,12 @@ class MethodOverrideTest extends TestCase
     ) {
         $response = Dispatcher::run(
             [
-                new MethodOverride(),
+                (new MethodOverride())->responseFactory(new \Middlewares\Utils\Factory\DiactorosFactory()),
                 function ($request) {
                     echo $request->getMethod();
                 },
             ],
-            Factory::createServerRequest([], $original)
+            Factory::createServerRequest($original, '/')
                 ->withHeader('X-Http-Method-Override', $overrided)
         );
 
@@ -77,7 +77,7 @@ class MethodOverrideTest extends TestCase
                     echo $request->getMethod();
                 },
             ],
-            Factory::createServerRequest([], $original)
+            Factory::createServerRequest($original, '/')
                 ->withQueryParams($queryParams)
                 ->withParsedBody($parsedBody)
         );
@@ -92,7 +92,7 @@ class MethodOverrideTest extends TestCase
             [
                 (new MethodOverride())->getMethods(['CONNECT']),
             ],
-            Factory::createServerRequest([], 'GET')
+            Factory::createServerRequest('GET', '/')
                 ->withHeader('X-Http-Method-Override', 'HEAD')
         );
 
@@ -105,7 +105,7 @@ class MethodOverrideTest extends TestCase
             [
                 (new MethodOverride())->postMethods(['PUT']),
             ],
-            Factory::createServerRequest([], 'POST')
+            Factory::createServerRequest('POST', '/')
                 ->withHeader('X-Http-Method-Override', 'DELETE')
         );
 
