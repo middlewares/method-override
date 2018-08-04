@@ -55,6 +55,10 @@ Allows to use a query parameter in addition to the `X-Http-Method-Override` in G
 
 Allows to use a parsed body parameter in addition to the `X-Http-Method-Override` in POST.
 
+#### `responseFactory(Psr\Http\Message\ResponseFactoryInterface $responseFactory)`
+
+A PSR-17 factory to create `405` responses.
+
 ---
 
 Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes and [CONTRIBUTING](CONTRIBUTING.md) for contributing details.
