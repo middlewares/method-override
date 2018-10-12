@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace Middlewares;
 
 use Middlewares\Utils\Traits\HasResponseFactory;
+use Middlewares\Utils\Factory;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -34,6 +36,11 @@ class MethodOverride implements MiddlewareInterface
      * @var null|string The GET parameter name
      */
     private $queryParameter;
+
+    public function __construct(ResponseFactoryInterface $responseFactory = null)
+    {
+        $this->responseFactory = $responseFactory ?: Factory::getResponseFactory();
+    }
 
     /**
      * Set allowed method for GET.
