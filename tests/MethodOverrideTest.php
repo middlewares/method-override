@@ -31,7 +31,7 @@ class MethodOverrideTest extends TestCase
     ) {
         $response = Dispatcher::run(
             [
-                (new MethodOverride())->responseFactory(new \Middlewares\Utils\Factory\DiactorosFactory()),
+                new MethodOverride(),
                 function ($request) {
                     echo $request->getMethod();
                 },

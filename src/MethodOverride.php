@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Middlewares;
 
-use Middlewares\Utils\Traits\HasResponseFactory;
 use Middlewares\Utils\Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -13,9 +12,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MethodOverride implements MiddlewareInterface
 {
-    use HasResponseFactory;
-
     const HEADER = 'X-Http-Method-Override';
+
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $responseFactory;
 
     /**
      * @var array Allowed methods overrided in GET
@@ -96,7 +98,7 @@ class MethodOverride implements MiddlewareInterface
                 if (in_array($method, $allowed)) {
                     $request = $request->withMethod($method);
                 } else {
-                    return $this->createResponse(405);
+                    return $this->responseFactory->createResponse(405);
                 }
             }
         }
