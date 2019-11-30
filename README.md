@@ -25,20 +25,18 @@ composer require middlewares/method-override
 ## Example
 
 ```php
-$dispatcher = new Dispatcher([
-	(new Middlewares\MethodOverride())
+Dispatcher::run([
+    (new Middlewares\MethodOverride())
         ->getMethods(['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'])
         ->postMethods(['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'])
-		->queryParameter('method')
-		->parsedBodyParameter('method')
+        ->queryParameter('method')
+        ->parsedBodyParameter('method')
 ]);
-
-$response = $dispatcher->dispatch(new ServerRequest());
 ```
 
 ## Usage
 
-In the constructor you can provide a `Psr\Http\Message\ResponseFactoryInterface` as the second argument, that will be used to create the error response (`405`). If it's not defined, [Middleware\Utils\Factory](https://github.com/middlewares/utils#factory) will be used to detect it automatically.
+In the constructor you can provide a `Psr\Http\Message\ResponseFactoryInterface` to create the error response (`405`). If it's not defined, [Middleware\Utils\Factory](https://github.com/middlewares/utils#factory) will be used to detect it automatically.
 
 ```php
 $responseFactory = new MyOwnResponseFactory();
