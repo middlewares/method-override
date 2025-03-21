@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MethodOverride implements MiddlewareInterface
 {
-    const HEADER = 'X-Http-Method-Override';
+    public const HEADER = 'X-Http-Method-Override';
 
     /**
      * @var ResponseFactoryInterface
@@ -20,12 +20,12 @@ class MethodOverride implements MiddlewareInterface
     private $responseFactory;
 
     /**
-     * @var array Allowed methods overrided in GET
+     * @var array<string> Allowed methods overrided in GET
      */
     private $getMethods = ['HEAD', 'CONNECT', 'TRACE', 'OPTIONS'];
 
     /**
-     * @var array Allowed methods overrided in POST
+     * @var array<string> Allowed methods overrided in POST
      */
     private $postMethods = ['PATCH', 'PUT', 'DELETE', 'COPY', 'LOCK', 'UNLOCK'];
 
@@ -39,13 +39,15 @@ class MethodOverride implements MiddlewareInterface
      */
     private $queryParameter;
 
-    public function __construct(ResponseFactoryInterface $responseFactory = null)
+    public function __construct(?ResponseFactoryInterface $responseFactory = null)
     {
         $this->responseFactory = $responseFactory ?: Factory::getResponseFactory();
     }
 
     /**
      * Set allowed method for GET.
+     *
+     * @param array<string> $getMethods
      */
     public function getMethods(array $getMethods): self
     {
@@ -56,6 +58,8 @@ class MethodOverride implements MiddlewareInterface
 
     /**
      * Set allowed method for POST.
+     *
+     * @param array<string> $postMethods
      */
     public function postMethods(array $postMethods): self
     {
@@ -114,6 +118,7 @@ class MethodOverride implements MiddlewareInterface
         if ($request->getMethod() === 'POST' && $this->parsedBodyParameter !== null) {
             $params = $request->getParsedBody();
 
+            // @phpstan-ignore-next-line
             if (isset($params[$this->parsedBodyParameter])) {
                 return strtoupper($params[$this->parsedBodyParameter]);
             }
@@ -131,6 +136,8 @@ class MethodOverride implements MiddlewareInterface
     /**
      * Returns the allowed override methods.
      * @codeCoverageIgnore
+     *
+     * @return array<string>
      */
     private function getAllowedOverrideMethods(ServerRequestInterface $request): array
     {
