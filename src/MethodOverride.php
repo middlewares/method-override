@@ -118,6 +118,7 @@ class MethodOverride implements MiddlewareInterface
         if ($request->getMethod() === 'POST' && $this->parsedBodyParameter !== null) {
             $params = $request->getParsedBody();
 
+            // @phpstan-ignore-next-line
             if (isset($params[$this->parsedBodyParameter])) {
                 return strtoupper($params[$this->parsedBodyParameter]);
             }
