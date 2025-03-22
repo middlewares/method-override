@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 class MethodOverrideTest extends TestCase
 {
+    /**
+     * @return array<int, array<int, int|string>>
+     */
     public function headersProvider(): array
     {
         return [
@@ -28,7 +31,7 @@ class MethodOverrideTest extends TestCase
         string $overrided,
         int $status,
         string $body
-    ) {
+    ): void {
         $response = Dispatcher::run(
             [
                 new MethodOverride(),
@@ -44,6 +47,9 @@ class MethodOverrideTest extends TestCase
         $this->assertEquals($body, (string) $response->getBody());
     }
 
+    /**
+     * @return array<int, array<int, int|string|array<string,string>>>
+     */
     public function paramsProvider(): array
     {
         return [
@@ -58,6 +64,9 @@ class MethodOverrideTest extends TestCase
 
     /**
      * @dataProvider paramsProvider
+     *
+     * @param array<string,string> $queryParams
+     * @param array<string,string> $parsedBody
      */
     public function testParams(
         string $original,
@@ -65,7 +74,7 @@ class MethodOverrideTest extends TestCase
         array $parsedBody,
         int $status,
         string $body
-    ) {
+    ): void {
         $middleware = (new MethodOverride())
             ->parsedBodyParameter('method')
             ->queryParameter('method');
@@ -86,7 +95,7 @@ class MethodOverrideTest extends TestCase
         $this->assertEquals($body, (string) $response->getBody());
     }
 
-    public function testCustomGet()
+    public function testCustomGet(): void
     {
         $response = Dispatcher::run(
             [
@@ -99,7 +108,7 @@ class MethodOverrideTest extends TestCase
         $this->assertEquals(405, $response->getStatusCode());
     }
 
-    public function testCustomPost()
+    public function testCustomPost(): void
     {
         $response = Dispatcher::run(
             [
